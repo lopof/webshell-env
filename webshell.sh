@@ -5,9 +5,9 @@ if ! [[ "$1" =~ ^(build|deploy|destroy)$ ]]; then
     exit 1
 fi
 
-export ORG="acend"
+export ORG="lopof"
 export APP="alpine-sshd"
-export USERS=16
+export USERS=1
 
 build() {
     set -e
@@ -20,11 +20,11 @@ build() {
 deploy() {
     kubectl -n train scale deploy shell-deploy --replicas=0
     kubectl apply -f deliver/deployment.yaml
-    for i in $(seq 1 $USERS); do
-        export USER=user$i
-        kubectl -n $USER scale deploy $USER-shell-deploy --replicas=0
-        cat deliver/workspace.yaml | envsubst | kubectl apply -f -
-    done
+#    for i in $(seq 1 $USERS); do
+#        export USER=user$i
+#        kubectl -n $USER scale deploy $USER-shell-deploy --replicas=0
+#        cat deliver/workspace.yaml | envsubst | kubectl apply -f -
+#    done
     kubectl -n train rollout status deployment shell-deploy
 }
 
